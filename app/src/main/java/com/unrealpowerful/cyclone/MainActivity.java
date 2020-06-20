@@ -1,8 +1,11 @@
 package com.unrealpowerful.cyclone;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,11 +22,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
+    private TextView currentTemp;
+    private TextView cityName;
     private Button buttonCityList;
     private Button mapButton;
-    private TextView cityName;
-    private TextView currentTemp;
     private double cTemp;
+    //private LocationManager locationManager;
     final String[] uaCitiesRU = new String[] {
             "Киев",
             "Харьков",
@@ -142,11 +146,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Style/Animation
+        ConstraintLayout constraintLayout = findViewById(R.id.layout);
+        AnimationDrawable animationDrawable = (AnimationDrawable)constraintLayout.getBackground();
+        animationDrawable.setEnterFadeDuration(2000);
+        animationDrawable.setExitFadeDuration(4000);
+        animationDrawable.start();
+
         Intent extras = getIntent();
         cityName = findViewById(R.id.cityName);
         buttonCityList = findViewById(R.id.bCityList);
         mapButton = findViewById(R.id.bMap);
         currentTemp = findViewById(R.id.currentTemp);
+        //locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         if(extras.hasExtra("cityID")) {
             cityName.setText(uaCitiesRU[extras.getIntExtra("cityID", 0)]);
@@ -167,4 +179,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+    }
+
+
 }
