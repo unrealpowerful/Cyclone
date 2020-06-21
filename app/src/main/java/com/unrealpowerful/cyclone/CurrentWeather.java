@@ -54,9 +54,9 @@ public class CurrentWeather {
         if (icon.contains("02d") || icon.contains("02n"))
             return "Слегка облачно";
         if (icon.contains("03d") || icon.contains("03n"))
-            return "Переменная облачность";
-        if (icon.contains("04d") || icon.contains("04n"))
             return "Облачность";
+        if (icon.contains("04d") || icon.contains("04n"))
+            return "Переменная облачность";
         if (icon.contains("09d") || icon.contains("09n"))
             return "Несильный дождь";
         if (icon.contains("10d") || icon.contains("10n"))
