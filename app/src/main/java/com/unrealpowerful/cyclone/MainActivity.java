@@ -8,7 +8,8 @@ import android.graphics.drawable.AnimationDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -18,137 +19,26 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
     private TextView currentTemp;
     private TextView cityName;
-    private Button buttonCityList;
-    private Button mapButton;
-    private double cTemp;
-    //private LocationManager locationManager;
-    final String[] uaCitiesRU = new String[] {
-            "Киев",
-            "Харьков",
-            "Одесса",
-            "Днепр",
-            "Донецк",
-            "Запорожье",
-            "Львов",
-            "Кривой Рог",
-            "Николаев",
-            "Севастополь",
-            "Мариуполь",
-            "Луганск",
-            "Винница",
-            "Макеевка",
-            "Симферополь",
-            "Херсон",
-            "Полтава",
-            "Чернигов",
-            "Черкассы",
-            "Хмельницкий",
-            "Черновцы",
-            "Житомир",
-            "Сумы",
-            "Ровно",
-            "Горловка",
-            "Ивано-Франковск",
-            "Каменское",
-            "Кропивницкий",
-            "Тернополь",
-            "Кременчуг",
-            "Луцк",
-            "Белая Церковь",
-            "Краматорск",
-            "Мелитополь",
-            "Керчь",
-            "Ужгород",
-            "Славянск",
-            "Никополь",
-            "Бердянск",
-            "Алчевск",
-            "Евпатория",
-            "Бровары",
-            "Павлоград",
-            "Северодонецк"
-    };
-    final String[] uaCitiesEN = new String[] {
-            "Kyiv",
-            "Kharkiv",
-            "Odesa",
-            "Dnipro",
-            "Donetsk",
-            "Zaporizhia",
-            "Lviv",
-            "Kryvyi Rih",
-            "Mykolayiv",
-            "Sevastopol",
-            "Mariupol",
-            "Luhansk",
-            "Vinnytsia",
-            "Makiyivka",
-            "Simferopol",
-            "Kherson",
-            "Poltava",
-            "Chernihiv",
-            "Cherkasy",
-            "Khmelnytskyi",
-            "Chernivtsi",
-            "Zhytomyr",
-            "Sumy",
-            "Rivne",
-            "Horlivka",
-            "Ivano-Frankivsk",
-            "Kamianske",
-            "Kropyvnytskyi",
-            "Ternopil",
-            "Kremenchuk",
-            "Lutsk",
-            "Bila Tserkva",
-            "Kramatorsk",
-            "Melitopol",
-            "Kerch",
-            "Uzhhorod",
-            "Sloviansk",
-            "Nikopol",
-            "Berdyansk",
-            "Alchevsk",
-            "Yevpatoriya",
-            "Brovary",
-            "Pavlohrad",
-            "Syeverodonetsk"
-    };
-    protected void doGetRequest(String url)
-    {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    JSONObject currentWeather = response.getJSONObject("main");
-                    cTemp = currentWeather.getDouble("temp") - 273.15;
-                    currentTemp.setText(String.valueOf((int)cTemp) + "\u2103");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                currentTemp.setText(error.toString());
-            }
-        });
-        queue.add(request);
-    }
+    private TextView currentDescription;
+    private ImageButton buttonCityList;
+    private ImageButton mapButton;
+    private ImageView currentWeatherImage;
+    private CurrentWeather currentWeather;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Style/Animation
-        ConstraintLayout constraintLayout = findViewById(R.id.layout);
-        AnimationDrawable animationDrawable = (AnimationDrawable)constraintLayout.getBackground();
+        ConstraintLayout constraintLayout = findViewById(R.id.MainLayout);
+        AnimationDrawable animationDrawable = (AnimationDrawable) constraintLayout.getBackground();
         animationDrawable.setEnterFadeDuration(2000);
         animationDrawable.setExitFadeDuration(4000);
         animationDrawable.start();
@@ -158,12 +48,16 @@ public class MainActivity extends AppCompatActivity {
         buttonCityList = findViewById(R.id.bCityList);
         mapButton = findViewById(R.id.bMap);
         currentTemp = findViewById(R.id.currentTemp);
-        //locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        currentWeatherImage = findViewById(R.id.cWeatherImage);
+        currentDescription = findViewById(R.id.cDescription);
 
-        if(extras.hasExtra("cityID")) {
-            cityName.setText(uaCitiesRU[extras.getIntExtra("cityID", 0)]);
-            doGetRequest(String.format("http://api.openweathermap.org/data/2.5/weather?q=%s&appid=3007156c4d9747d2260a99b96d4841f3", uaCitiesEN[extras.getIntExtra("cityID", 0)]));
+        if (extras.hasExtra("cityID")) {
+            currentWeather = new CurrentWeather();
+            currentWeather.city = currentWeather.getCityNameById(extras.getIntExtra("cityID", 0));
+            cityName.setText(currentWeather.translateCityToRussian(currentWeather.city));
+            updateInfo(String.format("http://api.openweathermap.org/data/2.5/weather?q=%s&appid=3007156c4d9747d2260a99b96d4841f3", currentWeather.city));
         }
+        //Button listeners
         buttonCityList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,18 +75,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
-
     }
 
     @Override
     protected void onPause()
     {
         super.onPause();
-
     }
 
+    protected void updateInfo(String url)
+    {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject main = response.getJSONObject("main");
+                    JSONArray weather = response.getJSONArray("weather");
+                    JSONObject wIcon = weather.getJSONObject(0);
+                    currentWeather.temp = main.getDouble("temp");
+                    currentWeather.icon = wIcon.getString("icon");
+                    if(currentWeather != null) {
+                        currentTemp.setText((int)currentWeather.getTempCelsius() + "\u2103");
+                        currentWeatherImage.setImageResource(currentWeather.getIcon(currentWeather.icon));
+                        currentDescription.setText(currentWeather.getDescription());
+                    }
 
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        queue.add(request);
+    }
 }
