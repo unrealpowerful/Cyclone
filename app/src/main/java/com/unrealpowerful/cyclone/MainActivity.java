@@ -3,8 +3,12 @@ package com.unrealpowerful.cyclone;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private WeatherInfo[] timeWeatherInfo = new WeatherInfo[40];
     private ListView weatherList;
     private WeatherListAdapter listWeatherAdapter;
+    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +60,10 @@ public class MainActivity extends AppCompatActivity {
         buttonCityList = findViewById(R.id.bCityList);
         buttonMap = findViewById(R.id.bMap);
         weatherList = findViewById(R.id.weatherList);
+        weatherInfo = new WeatherInfo();
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         if (extras.hasExtra("cityID")) {
-            weatherInfo = new WeatherInfo();
             weatherInfo.city = weatherInfo.getCityNameById(extras.getIntExtra("cityID", 0));
             updateInfo(String.format("http://api.openweathermap.org/data/2.5/weather?q=%s&appid=3007156c4d9747d2260a99b96d4841f3", weatherInfo.city));
             updateInfo(String.format("http://api.openweathermap.org/data/2.5/forecast?q=%s&appid=3007156c4d9747d2260a99b96d4841f3", weatherInfo.city));
@@ -79,15 +86,55 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onResume() {
         super.onResume();
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 10, 10, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 10, 10, locationListener);
     }
 
     @Override
-    protected void onPause()
-    {
+    protected void onPause() {
         super.onPause();
+    }
+
+    private LocationListener locationListener = new LocationListener() {
+
+        @Override
+        public void onLocationChanged(Location location) {
+            showMyLocationWeather(location);
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+
+        @SuppressLint("MissingPermission")
+        @Override
+        public void onProviderEnabled(String provider) {
+            showMyLocationWeather(locationManager.getLastKnownLocation(provider));
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+    };
+
+    private void showMyLocationWeather(Location location) {
+        if (location == null)
+            return;
+        if (weatherInfo.city == null) {
+            if (location.getProvider().equals(LocationManager.GPS_PROVIDER)) {
+                updateInfo(String.format("http://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=3007156c4d9747d2260a99b96d4841f3", location.getLatitude(), location.getLongitude()));
+                updateInfo(String.format("http://api.openweathermap.org/data/2.5/forecast?lat=%f&lon=%f&appid=3007156c4d9747d2260a99b96d4841f3", location.getLatitude(), location.getLongitude()));
+            } else if (location.getProvider().equals(LocationManager.NETWORK_PROVIDER)) {
+                updateInfo(String.format("http://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=3007156c4d9747d2260a99b96d4841f3", location.getLatitude(), location.getLongitude()));
+                updateInfo(String.format("http://api.openweathermap.org/data/2.5/forecast?lat=%f&lon=%f&appid=3007156c4d9747d2260a99b96d4841f3", location.getLatitude(), location.getLongitude()));
+            }
+        }
     }
 
     protected void updateInfo(String url)
