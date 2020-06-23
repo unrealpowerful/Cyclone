@@ -1,12 +1,13 @@
 package com.unrealpowerful.cyclone;
 
-public class CurrentWeather {
+public class WeatherInfo {
 
-    final private String[] uaCitiesRU = new String[]{"Киев", "Харьков", "Одесса", "Днепр", "Донецк", "Запорожье", "Львов", "Кривой Рог", "Николаев", "Севастополь", "Мариуполь", "Луганск", "Винница", "Макеевка", "Симферополь", "Херсон", "Полтава", "Чернигов", "Черкассы", "Хмельницкий", "Черновцы", "Житомир", "Сумы", "Ровно", "Горловка", "Ивано-Франковск", "Каменское", "Кропивницкий", "Тернополь", "Кременчуг", "Луцк", "Белая Церковь", "Краматорск", "Мелитополь", "Керчь", "Ужгород", "Славянск", "Никополь", "Бердянск", "Алчевск", "Евпатория", "Бровары", "Павлоград", "Северодонецк"};
-    final private String[] uaCitiesEN = new String[]{"Kyiv", "Kharkiv", "Odesa", "Dnipro", "Donetsk", "Zaporizhia", "Lviv", "Kryvyi Rih", "Mykolayiv", "Sevastopol", "Mariupol", "Luhansk", "Vinnytsia", "Makiyivka", "Simferopol", "Kherson", "Poltava", "Chernihiv", "Cherkasy", "Khmelnytskyi", "Chernivtsi", "Zhytomyr", "Sumy", "Rivne", "Horlivka", "Ivano-Frankivsk", "Kamianske", "Kropyvnytskyi", "Ternopil", "Kremenchuk", "Lutsk", "Bila Tserkva", "Kramatorsk", "Melitopol", "Kerch", "Uzhhorod", "Sloviansk", "Nikopol", "Berdyansk", "Alchevsk", "Yevpatoriya", "Brovary", "Pavlohrad", "Syeverodonetsk"};
+    private String[] uaCitiesRU = new String[]{"Киев", "Харьков", "Одесса", "Днепр", "Донецк", "Запорожье", "Львов", "Кривой Рог", "Николаев", "Севастополь", "Мариуполь", "Луганск", "Винница", "Макеевка", "Симферополь", "Херсон", "Полтава", "Чернигов", "Черкассы", "Хмельницкий", "Черновцы", "Житомир", "Сумы", "Ровно", "Горловка", "Ивано-Франковск", "Каменское", "Кропивницкий", "Тернополь", "Кременчуг", "Луцк", "Белая Церковь", "Краматорск", "Мелитополь", "Керчь", "Ужгород", "Славянск", "Никополь", "Бердянск", "Алчевск", "Евпатория", "Бровары", "Павлоград", "Северодонецк"};
+    private String[] uaCitiesEN = new String[]{"Kyiv", "Kharkiv", "Odesa", "Dnipro", "Donetsk", "Zaporizhia", "Lviv", "Kryvyi Rih", "Mykolayiv", "Sevastopol", "Mariupol", "Luhansk", "Vinnytsia", "Makiyivka", "Simferopol", "Kherson", "Poltava", "Chernihiv", "Cherkasy", "Khmelnytskyi", "Chernivtsi", "Zhytomyr", "Sumy", "Rivne", "Horlivka", "Ivano-Frankivsk", "Kamianske", "Kropyvnytskyi", "Ternopil", "Kremenchuk", "Lutsk", "Bila Tserkva", "Kramatorsk", "Melitopol", "Kerch", "Uzhhorod", "Sloviansk", "Nikopol", "Berdyansk", "Alchevsk", "Yevpatoriya", "Brovary", "Pavlohrad", "Syeverodonetsk"};
     public String city;
     public double temp;
     public String icon;
+    public String time;
 
     public int getIcon(String icon) {
         if (icon.contains("01d"))
@@ -79,7 +80,7 @@ public class CurrentWeather {
     public String translateCityToRussian(String city) {
         for(int i = 0; i < uaCitiesEN.length; i++)
         {
-            if(city == uaCitiesEN[i])
+            if(city.contains(uaCitiesEN[i]))
                 return uaCitiesRU[i];
         }
         return city;

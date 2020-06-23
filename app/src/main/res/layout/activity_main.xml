@@ -8,24 +8,12 @@
     android:background="@drawable/gradient_list"
     tools:context=".MainActivity">
 
-    <ImageButton
-        android:id="@+id/bMap"
-        android:layout_width="45dp"
-        android:layout_height="37dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="6dp"
-        android:background="#00FFFFFF"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_dialog_map" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="342dp"
         android:layout_height="109dp"
         android:layout_marginStart="34dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="35dp"
         android:background="#65FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,33 +31,17 @@
             android:scaleY="2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/img03d" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/currentTemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="19dp"
-            android:layout_marginTop="7dp"
-            android:text="\u2103"
+            android:layout_marginTop="47dp"
             android:textAlignment="viewStart"
             android:textColor="#000000"
             android:textSize="24sp"
-            app:layout_constraintStart_toEndOf="@+id/cWeatherImage"
-            app:layout_constraintTop_toBottomOf="@+id/cityName" />
-
-        <TextView
-            android:id="@+id/cityName"
-            android:layout_width="193dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="19dp"
-            android:layout_marginTop="16dp"
-            android:text="Current city"
-            android:textAlignment="viewStart"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/cWeatherImage"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -78,24 +50,55 @@
             android:layout_width="164dp"
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="Description"
+            android:layout_marginTop="7dp"
             android:textAlignment="viewStart"
             android:textColor="#000000"
             android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/currentTemp"
-            app:layout_constraintTop_toBottomOf="@+id/cityName" />
+            app:layout_constraintTop_toBottomOf="@+id/bCityList" />
+
+        <ImageButton
+            android:id="@+id/bMap"
+            android:layout_width="33dp"
+            android:layout_height="26dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="2dp"
+            android:background="#00FFFFFF"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_dialog_map" />
+
+        <Button
+            android:id="@+id/bCityList"
+            style="@style/Widget.AppCompat.TextView"
+            android:layout_width="193dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="9dp"
+            android:background="#00FFFFFF"
+            android:text="Выберите город"
+            android:textAlignment="viewStart"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/cWeatherImage"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageButton
-        android:id="@+id/bCityList"
-        android:layout_width="51dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:background="#00FFFFFF"
+    <ListView
+        android:id="@+id/weatherList"
+        android:layout_width="342dp"
+        android:layout_height="499dp"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="16dp"
+        android:background="#65FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/city_button" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
