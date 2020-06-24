@@ -67,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
             weatherInfo.city = weatherInfo.getCityNameById(extras.getIntExtra("cityID", 0));
             updateInfo(String.format("http://api.openweathermap.org/data/2.5/weather?q=%s&appid=3007156c4d9747d2260a99b96d4841f3", weatherInfo.city));
             updateInfo(String.format("http://api.openweathermap.org/data/2.5/forecast?q=%s&appid=3007156c4d9747d2260a99b96d4841f3", weatherInfo.city));
+        } else if(extras.hasExtra("mapLat") && extras.hasExtra("mapLon")) {
+            updateInfo(String.format("http://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=3007156c4d9747d2260a99b96d4841f3", extras.getDoubleExtra("mapLat", 0), extras.getDoubleExtra("mapLon", 0)));
+            updateInfo(String.format("http://api.openweathermap.org/data/2.5/forecast?lat=%f&lon=%f&appid=3007156c4d9747d2260a99b96d4841f3", extras.getDoubleExtra("mapLat", 0), extras.getDoubleExtra("mapLon", 0)));
         }
 
         buttonCityList.setOnClickListener(new View.OnClickListener() {
